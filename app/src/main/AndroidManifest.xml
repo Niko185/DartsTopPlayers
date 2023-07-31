@@ -13,7 +13,11 @@
         android:theme="@style/Theme.DartsTopPlayers"
         tools:targetApi="31">
         <activity
-            android:name=".presentation.MainActivity"
+            android:name=".presentation.screen_2.AddEditorActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true"/>
+        <activity
+            android:name=".presentation.screen_1.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

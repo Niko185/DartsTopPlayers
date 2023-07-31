@@ -1,13 +1,14 @@
-package com.example.dartstopplayers.presentation
+package com.example.dartstopplayers.presentation.screen_1
 
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dartstopplayers.R
+import com.example.dartstopplayers.presentation.screen_2.AddEditorActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
     private lateinit var mainViewModel: MainViewModel
@@ -21,8 +22,8 @@ class MainActivity : AppCompatActivity() {
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
         mainViewModel.mainListPlayers.observe(this){
             rcViewPlayersAdapter.submitList(it)
-
         }
+        onClickFloatingButton()
     }
 
     private fun initRcView() {
@@ -64,20 +65,30 @@ class MainActivity : AppCompatActivity() {
 
         }
         ItemTouchHelper(callback).attachToRecyclerView(rcViewMaket)
-        setupLongClickListener()
-        setupClickListener()
+        onClickLongItemRcView()
+        onClickItemRcView()
 
     }
 
-    private fun  setupLongClickListener() {
+    private fun  onClickLongItemRcView() {
         rcViewPlayersAdapter.onPlayerItemListenerLongClick = {
             mainViewModel.changeStatusPlayer(it)
         }
     }
 
-    private fun setupClickListener() {
+    private fun onClickItemRcView() {
         rcViewPlayersAdapter.onPlayerItemListenerShortClick = {
-            Log.d("MyLog", it.toString())
+            val startIntent = AddEditorActivity.newIntentStartScreenEditMode(this, it.playerId)
+            startActivity(startIntent)
         }
     }
+
+    private fun onClickFloatingButton() {
+        val buttonAddFloating = findViewById<FloatingActionButton>(R.id.floatingButton)
+        buttonAddFloating.setOnClickListener {
+            val startIntent = AddEditorActivity.newIntentStartScreenAddMode(this)
+            startActivity(startIntent)
+        }
+    }
+
 }

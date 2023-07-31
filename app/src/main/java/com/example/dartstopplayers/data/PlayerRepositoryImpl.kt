@@ -12,8 +12,8 @@ object PlayerRepositoryImpl : PlayerRepository {
     private val playerList = sortedSetOf<Player>({ o1, o2 -> o1.playerId.compareTo(o2.playerId) })
     private var autoIncrementId = 0
     init {
-        for (i in 0 until 1000) {
-            val item = Player(nickname = "nickname $i", status = Random.nextBoolean())
+        for (index in 0 until 25) {
+            val item = Player(nickname = "nickname: $index", status = Random.nextBoolean(), countGame = "${Random.nextInt(100,1000)}")
             addPlayer(item)
         }
     }

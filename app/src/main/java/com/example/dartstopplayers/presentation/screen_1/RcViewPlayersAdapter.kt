@@ -1,4 +1,4 @@
-package com.example.dartstopplayers.presentation
+package com.example.dartstopplayers.presentation.screen_1
 
 import android.view.LayoutInflater
 import android.view.View
@@ -38,6 +38,7 @@ class RcViewPlayersAdapter :
         }
 
         itemViewHolder.nicknamePlayer.text = item.nickname
+        itemViewHolder.countGame.text = item.countGame
     }
 
 
@@ -52,6 +53,7 @@ class RcViewPlayersAdapter :
 
     class ItemViewHolder(val maketView: View) : ViewHolder(maketView) {
         val nicknamePlayer = maketView.findViewById<TextView>(R.id.nicknamePlayer)
+        val countGame = maketView.findViewById<TextView>(R.id.countGame)
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Player>() {

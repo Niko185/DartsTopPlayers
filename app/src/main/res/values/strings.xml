@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DartsTopPlayers</string>
+    <string name="error_input_countGame">error input GameCount</string>
+    <string name="error_input_nickname">error input Nickname</string>
 </resources>
