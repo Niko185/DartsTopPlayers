@@ -44,7 +44,7 @@ object PlayerRepositoryImpl : PlayerRepository {
     override fun getPlayerById(playerId: Int): Player {
         return playerList.find {
             it.playerId == playerId
-        } ?: throw RuntimeException("Target id not found")
+        } ?: throw RuntimeException("Player id not found")
     }
 
     private fun updateList() {

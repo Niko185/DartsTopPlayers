@@ -3,27 +3,51 @@ package com.example.dartstopplayers.presentation.screen_1
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentContainerView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.dartstopplayers.R
 import com.example.dartstopplayers.presentation.screen_2.AddEditorActivity
+import com.example.dartstopplayers.presentation.screen_2.AddEditorFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AddEditorFragment.CloseFragmentToActionListener {
     private lateinit var mainViewModel: MainViewModel
     private lateinit var rcViewPlayersAdapter: RcViewPlayersAdapter
+    private var fragmentHolder: FragmentContainerView? = null
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        setupFragmentHolderForAlbumVersion()// этот контейнер  присутствует только в альбомном располоджении телефона
         initRcView()
+        initViewModel()
+        observeDataRcView()
+        onClickFloatingButton()
+    }
+    private fun setupFragmentHolderForAlbumVersion(){
+        fragmentHolder = findViewById(R.id.fragmentHolder)
+    }
+    private fun initViewModel(){
         mainViewModel = ViewModelProvider(this)[MainViewModel::class.java]
+    }
+    private fun observeDataRcView(){
         mainViewModel.mainListPlayers.observe(this){
             rcViewPlayersAdapter.submitList(it)
         }
-        onClickFloatingButton()
+    }
+
+    private fun isBookModeOrientationScreen(): Boolean {
+        return fragmentHolder == null // Если fragmentHolder null значит ориентация книжная так как fragmentHolder будет отсутствовать в разметке.
+    }
+
+    private fun launchFragment(fragment: Fragment) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction().replace(R.id.fragmentHolder, fragment).addToBackStack(null).commit()
     }
 
     private fun initRcView() {
@@ -78,17 +102,28 @@ class MainActivity : AppCompatActivity() {
 
     private fun onClickItemRcView() {
         rcViewPlayersAdapter.onPlayerItemListenerShortClick = {
-            val startIntent = AddEditorActivity.newIntentStartScreenEditMode(this, it.playerId)
-            startActivity(startIntent)
+            if (isBookModeOrientationScreen()) {
+                val startIntent = AddEditorActivity.newIntentStartScreenEditMode(this, it.playerId)
+                startActivity(startIntent)
+            } else launchFragment(AddEditorFragment.newInstanceEditFragmentMode(it.playerId))
         }
     }
 
     private fun onClickFloatingButton() {
         val buttonAddFloating = findViewById<FloatingActionButton>(R.id.floatingButton)
         buttonAddFloating.setOnClickListener {
-            val startIntent = AddEditorActivity.newIntentStartScreenAddMode(this)
-            startActivity(startIntent)
+            if (isBookModeOrientationScreen()) {
+                val startIntent = AddEditorActivity.newIntentStartScreenAddMode(this)
+                startActivity(startIntent)
+            } else {
+                launchFragment(AddEditorFragment.newInstanceAddFragmentMode())
+            }
         }
+    }
+
+    override fun finishFragmentToAction() {
+        Toast.makeText(this@MainActivity, "Success", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.popBackStack()
     }
 
 }
