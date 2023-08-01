@@ -21,7 +21,7 @@ import java.lang.RuntimeException
 class AddEditorFragment : Fragment() {
    private lateinit var closeFragmentToActionListener: CloseFragmentToActionListener
 
-    private lateinit var addEditorViewModel: AddEditorViewModel
+    private lateinit var addEditorViewModelForFragment: AddEditorViewModelForFragment
     private lateinit var buttonSave: Button
     private lateinit var nicknameLayout: TextInputLayout
     private lateinit var nicknameEditText: EditText
@@ -36,6 +36,7 @@ class AddEditorFragment : Fragment() {
             closeFragmentToActionListener = context
         } else throw RuntimeException("Activity must empelemnt CloseFragmentToActionListener")
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -63,17 +64,17 @@ class AddEditorFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        addEditorViewModel = ViewModelProvider(this)[AddEditorViewModel::class.java]
+        addEditorViewModelForFragment = ViewModelProvider(this)[AddEditorViewModelForFragment::class.java]
     }
 
     private fun launchEditVariantScreen() {
-        addEditorViewModel.getPlayerById(playerId)
-        addEditorViewModel.player.observe(viewLifecycleOwner) {
+        addEditorViewModelForFragment.getPlayerById(playerId)
+        addEditorViewModelForFragment.player.observe(viewLifecycleOwner) {
             nicknameEditText.setText(it.nickname)
             gameCountEditText.setText(it.countGame)
         }
         buttonSave.setOnClickListener {
-            addEditorViewModel.editPlayer(
+            addEditorViewModelForFragment.editPlayer(
                 nicknameEditText.text?.toString(),
                 gameCountEditText.text?.toString()
             )
@@ -82,7 +83,7 @@ class AddEditorFragment : Fragment() {
 
     private fun launchAddVariantScreen() {
         buttonSave.setOnClickListener {
-            addEditorViewModel.addPlayer(
+            addEditorViewModelForFragment.addPlayer(
                 nicknameEditText.text?.toString(),
                 gameCountEditText.text?.toString()
             )
@@ -90,7 +91,7 @@ class AddEditorFragment : Fragment() {
     }
 
     private fun observedViewModel() {
-        addEditorViewModel.errorInputNickname.observe(viewLifecycleOwner) {
+        addEditorViewModelForFragment.errorInputNickname.observe(viewLifecycleOwner) {
             val messageError = if (it) {
                 getString(R.string.error_input_nickname)
             } else {
@@ -98,7 +99,7 @@ class AddEditorFragment : Fragment() {
             }
             nicknameLayout.error = messageError
         }
-        addEditorViewModel.errorInputGameCount.observe(viewLifecycleOwner) {
+        addEditorViewModelForFragment.errorInputGameCount.observe(viewLifecycleOwner) {
             val messageError = if (it) {
                 getString(R.string.error_input_countGame)
             } else {
@@ -106,7 +107,7 @@ class AddEditorFragment : Fragment() {
             }
             gameCountLayout.error = messageError
         }
-        addEditorViewModel.closeStateScreen.observe(viewLifecycleOwner) {
+        addEditorViewModelForFragment.closeStateScreen.observe(viewLifecycleOwner) {
             closeFragmentToActionListener.finishFragmentToAction()
         }
     }
@@ -124,7 +125,7 @@ class AddEditorFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                addEditorViewModel.resetErrorInputNickname()
+                addEditorViewModelForFragment.resetErrorInputNickname()
             }
 
             override fun afterTextChanged(p0: Editable?) {
@@ -136,7 +137,7 @@ class AddEditorFragment : Fragment() {
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                addEditorViewModel.resetErrorInputGameCount()
+                addEditorViewModelForFragment.resetErrorInputGameCount()
             }
 
             override fun afterTextChanged(p0: Editable?) {

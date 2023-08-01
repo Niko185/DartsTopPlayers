@@ -10,7 +10,7 @@ import com.example.dartstopplayers.domain.GetPlayerByIdUseCase
 import com.example.dartstopplayers.domain.Player
 import java.lang.Exception
 
-class AddEditorViewModel: ViewModel() {
+class AddEditorViewModelForFragment: ViewModel() {
 
     private val repository = PlayerRepositoryImpl
 
